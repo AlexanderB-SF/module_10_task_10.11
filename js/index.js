@@ -204,7 +204,7 @@ const sortAPI = {
    quickSort(arr);
   },
 
-  // выполняет сортировку и производит замер времени
+  // выполняет сортировку и производит замер времениgit
   startSort(sort, arr, comparation) {
     const start = new Date().getTime();
     sort(arr, comparation);
