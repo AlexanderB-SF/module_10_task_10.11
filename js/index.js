@@ -50,12 +50,12 @@ const display = () => {
     let fruitsItem = document.createElement("li")
     fruitsItem.classList.add("fruit__item", `${friutsColorCard[[fruits[i].color]]}`);
     fruitsItem.innerHTML = `
-    <div class="fruit__info">
-      <div>index: ${i}</div>
-      <div>kind: ${fruits[i].kind}</div>
-      <div>color: ${fruits[i].color}</div>
-      <div>weight (кг): ${fruits[i].weight}</div>
-    </div>
+      <div class="fruit__info">
+        <div>index: ${i}</div>
+        <div>kind: ${fruits[i].kind}</div>
+        <div>color: ${fruits[i].color}</div>
+        <div>weight (кг): ${fruits[i].weight}</div>
+      </div>
     `; 
     fruitsList.appendChild(fruitsItem);
   }
@@ -72,10 +72,11 @@ const getRandomInt = (min, max) => {
 };
 
 // перемешивание массива
+const cloneFruits = Array.from(fruits);
 const shuffleFruits = () => {
   let result = [];
-  let i = 0, elemPush;
-  const cloneFruits = Array.from(fruits);
+  let i = 0;
+  
   // ATTENTION: сейчас при клике вы запустите бесконечный цикл и браузер зависнет
   while (fruits.length > 0) {
     // TODO: допишите функцию перемешивания массива
@@ -84,8 +85,7 @@ const shuffleFruits = () => {
     // вырезаем его из fruits и вставляем в result.
     // ex.: [1, 2, 3], [] => [1, 3], [2] => [3], [2, 1] => [], [2, 1, 3]
     // (массив fruits будет уменьшатся, а result заполняться)
-    elemPush = fruits.splice(getRandomInt(0, fruits.length-1), 1);
-    result.splice(i, 0, elemPush[0]);
+    result.splice(i, 0, fruits.splice(getRandomInt(0, fruits.length-1), 1)[0]);
     i++;
   }
   if (JSON.stringify(cloneFruits) == JSON.stringify(result)) {
@@ -96,20 +96,19 @@ const shuffleFruits = () => {
 
 shuffleButton.addEventListener('click', () => {
   shuffleFruits();
-  display(fruits);
+  display();
 });
 
 /*** ФИЛЬТРАЦИЯ ***/
 
 // фильтрация массива
-let buff = fruits;
 const filterFruits = () => {
   let fruitsFilter;
-  fruits = buff;
+  fruits = cloneFruits;
   if ( (!!minWeight.value && !isNaN(minWeight.value)) && (!!maxWeight.value && !isNaN(maxWeight.value))) {
     fruitsFilter = fruits.filter((item) => {
       // TODO: допишите функцию
-      return minWeight.value <= item.weight && item.weight <= maxWeight.value ;
+      return minWeight.value <= item.weight && item.weight <= maxWeight.value;
       
     });
     fruits = fruitsFilter;
@@ -179,7 +178,8 @@ const sortAPI = {
         }
     }
 
-    return [this.quickSort(less), currentItem, this.quickSort(more)];
+    fruits = [...sortAPI.quickSort(less, comparation), currentItem, ...sortAPI.quickSort(more, comparation)];
+    return fruits;
   },
 
   // выполняет сортировку и производит замер времени
@@ -235,4 +235,3 @@ addActionButton.addEventListener('click', () => {
   weightInput.value = "";
   display();
 });
-// {"kind": "Мангустин", "color": "фиолетовый", "weight": 13}
