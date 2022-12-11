@@ -9,7 +9,7 @@ const sortTimeLabel = document.querySelector('.sort__time'); // поле с вр
 const sortChangeButton = document.querySelector('.sort__change__btn'); // кнопка смены сортировки
 const sortActionButton = document.querySelector('.sort__action__btn'); // кнопка сортировки
 const kindInput = document.querySelector('.kind__input'); // поле с названием вида
-const colorInput = document.querySelector('.color__input'); // поле с названием цвета
+const colorInput = document.querySelector('#color__input'); // поле с названием цвета
 const weightInput = document.querySelector('.weight__input'); // поле с весом
 const addActionButton = document.querySelector('.add__action__btn'); // кнопка добавления
 
@@ -35,6 +35,8 @@ let priority = ["желтый", "зеленый", "фиолетовый", "св�
 // преобразование JSON в объект JavaScript
 let fruits = JSON.parse(fruitsJSON);
 let friutsColorCard = JSON.parse(friutsColorCardJSON);
+
+const cloneFruits = Array.from(fruits);
 
 /*** ОТОБРАЖЕНИЕ ***/
 
@@ -72,7 +74,6 @@ const getRandomInt = (min, max) => {
 };
 
 // перемешивание массива
-const cloneFruits = Array.from(fruits);
 const shuffleFruits = () => {
   let result = [];
   let i = 0;
@@ -113,7 +114,6 @@ const filterFruits = () => {
     });
     fruits = fruitsFilter;
   }
-
   return fruits;
 };
 
@@ -229,7 +229,13 @@ addActionButton.addEventListener('click', () => {
   }
 
   const fruit = new AddFruit(kindInput, colorInput, weightInput);
+
+  if ((fruit.kind == "") || (fruit.color == "") || (fruit.weight == "")) {
+    return alert("заполните все поля для добавления фрукта");
+  }
+
   fruits.push(fruit);
+  cloneFruits.push(fruit);
   kindInput.value = "";
   colorInput.value = "";
   weightInput.value = "";
